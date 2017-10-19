@@ -1,20 +1,33 @@
 import java.util.Random;
 
 public class Main {
-	public static void main(String[] arg) {
-		Random random= new Random();
-		
-		int[] array=new int[3];
-		int firstDigit;
-		int secondDigit;
-		for(int i=0;i<3;i++)
-		{
-			array[i]=random.nextInt(900)+100;
-			System.out.println(array[i]);
-			firstDigit=array[i]/100;
-			secondDigit=array[i]/10%10;		
-			System.out.println("sum = "+(firstDigit+secondDigit));
-		}
+
+	public static int generateRandomNumber() {
+		Random random = new Random();
+		return random.nextInt(900) + 100;
 	}
 
+	public static int sum(int number1, int number2) {
+		return number1 + number2;
+	}
+
+	public static int findFirstDigit(int number) {
+		return number / 100;
+	}
+
+	public static int findSecondDigit(int number) {
+		return number / 10 % 10;
+	}
+
+	public static void main(String[] arg) {
+
+		for (int i = 0; i < 3; i++) {
+			int number = generateRandomNumber();
+			int firstDigit = findFirstDigit(number);
+			int secondDigit = findSecondDigit(number);
+			
+			Printer.printNumber(number);
+			Printer.printSum(sum(firstDigit, secondDigit));
+		}
+	}
 }
