@@ -39,4 +39,16 @@ public class ArrayWorker {
 		}
 		return position;
 	}
+
+	public static AEntity getEntityById(Integer id, AEntity[] array) {
+		AEntity entity = null;
+
+		for (int i = 0; i < getLength(array); i++) {
+			if (array[i].getId().equals(id)) {
+				entity = array[i];
+				break;
+			}
+		}
+		return entity;
+	}
 }

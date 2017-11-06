@@ -5,29 +5,32 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import com.senla.bookshop.enums.Status;
-import com.senla.bookshop.utils.GeneratorId;;
+import com.senla.bookshop.utils.Convert;
+import com.senla.bookshop.utils.GeneratorId;
+import com.senla.bookshop.utils.Sdf;;
 
 public class Order extends AEntity {
 	private Integer id;
 	private Date executionDate;
 	private Double price;
 	private Status status;
-	private Integer booksId;
+	private Integer bookId;
 
-	public Order(String executionDate, Double price, Status status, Integer booksId) throws ParseException {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
-		this.id = GeneratorId.generateOrdersId();
-		this.executionDate = sdf.parse(executionDate);
+	public Order(String executionDate, Double price, Status status, Integer bookId) throws ParseException {
+		this.id = GeneratorId.generateOrderId();
+		this.executionDate = Sdf.parse(executionDate);
 		this.price = price;
 		this.status = status;
-		this.booksId = booksId;
+		this.bookId = bookId;
 	}
 
-	public Order(Double price, Status status, Integer booksId) throws ParseException {
-		this.id = GeneratorId.generateOrdersId();
-		this.price = price;
-		this.status = status;
-		this.booksId = booksId;
+	public Order(String string) throws ParseException {
+		String[] stringArray = string.split(" ");
+		this.id = Integer.parseInt(stringArray[0]);
+		this.executionDate = Sdf.parse(stringArray[1]);
+		this.price = Double.parseDouble(stringArray[2]);
+		this.status = Convert.convertStatus(stringArray[3]);
+		this.bookId = Integer.parseInt(stringArray[4]);
 	}
 
 	public Integer getId() {
@@ -50,9 +53,12 @@ public class Order extends AEntity {
 		return status;
 	}
 
+	public Integer getBookId() {
+		return bookId;
+	}
+
 	public String toString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
-		return id + " " + sdf.format(executionDate) + " " + price + " " + status;
+		return id + " " + Sdf.format(executionDate) + " " + price + " " + status + " " + bookId;
 	}
 
 }

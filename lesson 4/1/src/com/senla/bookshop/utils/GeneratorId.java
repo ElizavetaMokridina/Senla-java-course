@@ -1,23 +1,23 @@
 package com.senla.bookshop.utils;
 
-import com.senla.bookshop.storages.StorageOfBooks;
-import com.senla.bookshop.storages.StorageOfOrders;
-import com.senla.bookshop.storages.StorageOfRequests;
+import com.senla.bookshop.storages.BookStorage;
+import com.senla.bookshop.storages.OrderStorage;
+import com.senla.bookshop.storages.RequestStorage;
 
 public class GeneratorId {
-	public static Integer generateBooksId() {
-		StorageOfBooks.setLastId(StorageOfBooks.getLastId()+3);
-		return StorageOfBooks.getLastId();
+	public static Integer generateBookId() {
+		BookStorage.setLastId(BookStorage.getLastId()+3);
+		return BookStorage.getLastId();
 	}
 	
-	public static Integer generateOrdersId() {
-		StorageOfOrders.setLastId(StorageOfOrders.getLastId()+3);
-		return StorageOfOrders.getLastId();
+	public static Integer generateOrderId() {
+		OrderStorage.setLastId(OrderStorage.getLastId()+3);
+		return OrderStorage.getLastId();
 	}
 	
 	public static Integer generateRequestId() {
-		StorageOfRequests.setLastId(StorageOfRequests.getLastId()+3);
-		return StorageOfRequests.getLastId();
+		RequestStorage.setLastId(RequestStorage.getLastId()+3);
+		return RequestStorage.getLastId();
 	}
 
 
