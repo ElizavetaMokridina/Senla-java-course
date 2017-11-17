@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.senla.bookshop.comparators.books.CompareBooksByAuthor;
-import com.senla.bookshop.comparators.books.CompareBooksByDateOfPublication;
+import com.senla.bookshop.comparators.books.CompareBooksByDate;
 import com.senla.bookshop.comparators.books.CompareBooksByName;
 import com.senla.bookshop.comparators.books.CompareBooksByPrice;
 import com.senla.bookshop.comparators.books.CompareBooksByStatus;
-import com.senla.bookshop.comparators.orders.CompareOrdersByExecutionDate;
+import com.senla.bookshop.comparators.orders.CompareOrdersByDate;
 import com.senla.bookshop.comparators.orders.CompareOrdersByPrice;
 import com.senla.bookshop.comparators.orders.CompareOrdersByStatus;
 import com.senla.bookshop.comparators.requesthistory.CompareRequestsByAlphabet;
@@ -17,13 +17,13 @@ import com.senla.bookshop.comparators.requesthistory.CompareRequestsByNumber;
 import com.senla.bookshop.entities.Book;
 import com.senla.bookshop.entities.Order;
 import com.senla.bookshop.entities.Request;
-import com.senla.bookshop.enums.BookStatus;
-import com.senla.bookshop.enums.Status;
+import com.senla.bookshop.entities.RequestHistory;
 import com.senla.bookshop.services.BookService;
 import com.senla.bookshop.services.OrderService;
 import com.senla.bookshop.services.RequestHistoryService;
 import com.senla.bookshop.services.RequestService;
 import com.senla.bookshop.utils.Printer;
+import org.apache.log4j.Logger;
 
 public class BookShop {
 	private static BookShop bookShop;
@@ -31,6 +31,7 @@ public class BookShop {
 	private OrderService orderService;
 	private RequestService requestService;
 	private RequestHistoryService requestHistoryService;
+	private Logger logger = Logger.getLogger(BookShop.class);
 
 	private BookShop() {
 		try {
@@ -39,7 +40,8 @@ public class BookShop {
 			this.requestService = new RequestService();
 			this.requestHistoryService = new RequestHistoryService();
 		} catch (ParseException e) {
-			Printer.print("error");
+			Printer.print("invalid input");
+			logger.error("invalid input", e);
 		}
 	}
 
@@ -51,103 +53,84 @@ public class BookShop {
 	}
 
 	public List<Book> sortBooksByAuthor() {
-		
+
 		return bookService.sortBooks(new CompareBooksByAuthor());
 	}
 
-	public void sortBooksByName() {
-		Printer.print("books sorted by name:");
-		Printer.printArray(bookService.sortBooks(new CompareBooksByName()));
+	public List<Book> sortBooksByName() {
+		return bookService.sortBooks(new CompareBooksByName());
 	}
 
-	public void sortBooksByDateOfPublication() {
-		Printer.print("books sorted by date of publication:");
-		Printer.printArray(bookService.sortBooks(new CompareBooksByDateOfPublication()));
+	public List<Book> sortBooksByDate() {
+		return bookService.sortBooks(new CompareBooksByDate());
 	}
 
-	public void sortBooksByPrice() {
-		Printer.print("books sorted by price:");
-		Printer.printArray(bookService.sortBooks(new CompareBooksByPrice()));
+	public List<Book> sortBooksByPrice() {
+
+		return bookService.sortBooks(new CompareBooksByPrice());
 	}
 
-	public void sortBooksByAvailabiliry() {
-		Printer.print("books sorted by availability:");
-		Printer.printArray(bookService.sortBooks(new CompareBooksByStatus()));
+	public List<Book> sortBooksByStatus() {
+		return bookService.sortBooks(new CompareBooksByStatus());
 	}
 
-	public void sortOrdersByExecutionDate() {
-		Printer.print("orders sorted by execution date:");
-		Printer.printArray(orderService.sortOrders(new CompareOrdersByExecutionDate()));
+	public List<Order> sortOrdersByDate() {
+
+		return orderService.sortOrders(new CompareOrdersByDate());
 	}
 
-	public void sortOrdersByPrice() {
-		Printer.print("orders sorted by price:");
-		Printer.printArray(orderService.sortOrders(new CompareOrdersByPrice()));
+	public List<Order> sortOrdersByPrice() {
+
+		return orderService.sortOrders(new CompareOrdersByPrice());
 	}
 
-	public void sortOrdersByStatus() {
-		Printer.print("orders sorted by status:");
-		Printer.printArray(orderService.sortOrders(new CompareOrdersByStatus()));
+	public List<Order> sortOrdersByStatus() {
+		return orderService.sortOrders(new CompareOrdersByStatus());
 	}
 
-	public void sortRequestsByNumber() {
-		Printer.print("requests sorted by number:");
-		Printer.printArrayRequests(requestHistoryService.sortRequests(new CompareRequestsByNumber()));
+	public List<RequestHistory> sortRequestsByNumber() {
+
+		return requestHistoryService.sortRequests(new CompareRequestsByNumber());
 	}
 
-	public void sortRequestsByAlphabet() {
-		Printer.print("requests sorted by alphabet:");
-		Printer.printArrayRequests(requestHistoryService.sortRequests(new CompareRequestsByAlphabet()));
+	public List<RequestHistory> sortRequestsByAlphabet() {
+		return requestHistoryService.sortRequests(new CompareRequestsByAlphabet());
 	}
 
-	public void getDoneByDate(Date date1, Date date2) {
-		Printer.print("done orders by date: ");
-		Printer.printArray(orderService.getDoneByDate(date1, date2));
+	public List<Order> getDoneByDate(Date date1, Date date2) {
+		return orderService.getDoneByDate(date1, date2);
 	}
 
-	public void getDoneByPrice(Date date1, Date date2) {
-		Printer.print("done orders by price: ");
-		Printer.printArray(orderService.getDoneByPrice(date1, date2));
+	public List<Order> getDoneByPrice(Date date1, Date date2) {
+		return orderService.getDoneByPrice(date1, date2);
 	}
 
-	public void getTotalPrice(Date date1, Date date2) {
-		Printer.print("total price: ");
-		Printer.print(orderService.getTotalPrice(date1, date2).toString());
+	public String getTotalPrice(Date date1, Date date2) {
+		return orderService.getTotalPrice(date1, date2).toString();
 	}
 
-	public void getNumberOfOrder(Date date1, Date date2) {
-		Printer.print("number of orders: ");
-		Printer.print(orderService.getNumberOfOrders(date1, date2).toString());
+	public String getNumberOfOrder(Date date1, Date date2) {
+
+		return orderService.getNumberOfOrders(date1, date2).toString();
 	}
 
-	public void getOrderById(Integer id) {
-		if (orderService.getOrderById(id) != null) {
-			Printer.print("order details:");
-			Printer.print(orderService.getOrderById(id).toString());
-		} else {
-			Printer.print("order not found");
-		}
+	public String getOrderById(Integer id) {
+
+		return orderService.getOrderById(id).toString();
 	}
 
-	public void getBookById(Integer id) {
-		if (bookService.getBookById(id) != null) {
-			Printer.print("book details:");
-			Printer.print(bookService.getBookById(id).toString());
-		} else {
-			Printer.print("book not found");
-		}
+	public String getBookById(Integer id) {
+
+		return bookService.getBookById(id).toString();
 	}
 
-	public void changeBookStatus(BookStatus status, Integer id) {
-		if (bookService.changeBookStatus(status, id) == false) {
-			Printer.print("book not found");
-		}
+	public void writeOffBook(Integer id) {
+		bookService.WriteOffBook(id);
+
 	}
 
-	public void changeOrderStatus(Status status, Integer id) {
-		if (orderService.changeOrderStatus(status, id) == false) {
-			Printer.print("order nod found");
-		}
+	public void cancelOrder(Integer id) {
+		orderService.cancelOrder(id);
 
 	}
 

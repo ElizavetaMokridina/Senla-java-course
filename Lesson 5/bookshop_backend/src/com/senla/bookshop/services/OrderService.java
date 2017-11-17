@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import com.senla.bookshop.comparators.orders.CompareOrdersByExecutionDate;
+import com.senla.bookshop.comparators.orders.CompareOrdersByDate;
 import com.senla.bookshop.comparators.orders.CompareOrdersByPrice;
 import com.senla.bookshop.entities.Book;
 import com.senla.bookshop.entities.Order;
@@ -20,17 +20,17 @@ public class OrderService {
 	private final OrderStorage orderStorage;
 
 	public OrderService() throws ParseException {
-		this.orderStorage = new OrderStorage();
+		this.orderStorage = OrderStorage.getInstance();
 	}
 
-	public List <Order> sortOrders(Comparator comparator) {
-		List <Order> orders  = orderStorage.getOrders();
+	public List <Order> sortOrders(Comparator<Order> comparator) {
+		List <Order> orders  = OrderStorage.getOrders();
 		orders.sort( comparator);
 		return orders;
 	}
 
 	public List <Order> getDoneByDate(Date date1, Date date2) {
-		List <Order> orders = sortOrders(new CompareOrdersByExecutionDate());
+		List <Order> orders = sortOrders(new CompareOrdersByDate());
 		List <Order> newOrders = new ArrayList<>();
 		for (Order order : orders) {
 			if (order.getStatus().equals(Status.DONE) && order.getExecutionDate().after(date1)
@@ -56,7 +56,7 @@ public class OrderService {
 	}
 
 	public Double getTotalPrice(Date date1, Date date2) {
-		List <Order> orders = orderStorage.getOrders();
+		List <Order> orders = OrderStorage.getOrders();
 		Double price = 0.0;
 		for (Order order : orders) {
 			if (order.getStatus().equals(Status.DONE) && order.getExecutionDate().after(date1)
@@ -68,7 +68,7 @@ public class OrderService {
 	}
 
 	public Integer getNumberOfOrders(Date date1, Date date2) {
-		List <Order> orders = orderStorage.getOrders();
+		List <Order> orders = OrderStorage.getOrders();
 		Integer count = 0;
 		for (Order order : orders) {
 			if (order.getStatus().equals(Status.DONE) && order.getExecutionDate().after(date1)
@@ -80,20 +80,15 @@ public class OrderService {
 	}
 
 	public Order getOrderById(Integer id) {
-		List <Order> orders = orderStorage.getOrders();
+		List <Order> orders = OrderStorage.getOrders();
 		int position = ListWorker.findById(id, orders);
-		if (position != -1) {
+		
 			return orders.get(position);
-		} else {
-			return null;
-		}
 	}
 
-	public boolean changeOrderStatus(Status status, Integer id) {
-		if (orderStorage.changeOrderStatus(status, id) == false) {
-			return false;
-		} else
-			return true;
+	public void cancelOrder(Integer id) {
+		orderStorage.changeOrderStatus(Status.CANCELED, id);
+			
 
 	}
 
@@ -102,8 +97,8 @@ public class OrderService {
 	}
 	
 	public void completeOrder(Integer id) {
-		changeOrderStatus(Status.DONE,id);
-		Order order =(Order)ListWorker.getEntityById(id,orderStorage.getOrders() );
+		orderStorage.changeOrderStatus(Status.DONE,id);
+		Order order =(Order)ListWorker.getEntityById(id,OrderStorage.getOrders() );
 		Book book=(Book)ListWorker.getEntityById(order.getBookId(),BookStorage.getBooks());
 		book.setBookStatus(BookStatus.NOT_IN_STOCK);
 	}
