@@ -13,11 +13,12 @@ import com.senla.bookshop.enums.Status;
 import com.senla.bookshop.utils.ListWorker;
 
 public class BookStorage {
-	private static List <Book> books = new ArrayList<>();
+	private static BookStorage bookStorage;
+	private static List<Book> books = new ArrayList<>();
 	private static Integer lastId = 0;
 	private TextFileWorker textFileWorker;
 
-	public static List <Book> getBooks() {
+	public static List<Book> getBooks() {
 		return books;
 	}
 
@@ -29,11 +30,18 @@ public class BookStorage {
 		lastId = newlastId;
 	}
 
-	public BookStorage() throws ParseException {
+	public static BookStorage getInstance() throws ParseException {
+		if (bookStorage == null) {
+			bookStorage = new BookStorage();
+		}
+		return bookStorage;
+	}
+
+	private BookStorage() throws ParseException {
 		this.textFileWorker = new TextFileWorker("D:\\ó÷¸áêà\\Senla\\Lesson4_Task1\\Books.txt");
 		List<String> strings = new ArrayList<>(Arrays.asList(textFileWorker.readFromFile()));
-		
-		for (String string: strings) {
+
+		for (String string : strings) {
 			books.add(new Book(string));
 		}
 	}
@@ -43,13 +51,13 @@ public class BookStorage {
 		for (Book book : books) {
 			if (book.getAuthor().equals(newBook.getAuthor()) && book.getName().equals(newBook.getName())) {
 				changeBookStatus(BookStatus.IN_STOCK, book.getId());
-				List <Request> requests = RequestStorage.getRequests();
-				for (Request request: requests) {
-					if(request.getBookId().equals(book.getId())) {
+				List<Request> requests = RequestStorage.getRequests();
+				for (Request request : requests) {
+					if (request.getBookId().equals(book.getId())) {
 						request.setStatus(Status.DONE);
 					}
 				}
-				
+
 				flag = true;
 				break;
 			}
@@ -59,13 +67,10 @@ public class BookStorage {
 		}
 	}
 
-	public boolean changeBookStatus(BookStatus status, Integer id) {
+	public void changeBookStatus(BookStatus status, Integer id) {
 		Book book = (Book) ListWorker.getEntityById(id, books);
-		if (book != null) {
-			book.setBookStatus(status);
-			return true;
-		} else
-			return false;
+		book.setBookStatus(status);
+
 	}
 
 	public void writeToFile() {

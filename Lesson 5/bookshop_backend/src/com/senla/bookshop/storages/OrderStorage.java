@@ -11,11 +11,12 @@ import com.senla.bookshop.enums.Status;
 import com.senla.bookshop.utils.ListWorker;
 
 public class OrderStorage {
-	private List<Order> orders = new ArrayList<>();
+	private static OrderStorage orderStorage;
+	private static List<Order> orders = new ArrayList<>();
 	private static Integer lastId = 0;
 	private TextFileWorker textFileWorker;
 
-	public List<Order> getOrders() {
+	public static List<Order> getOrders() {
 		return orders;
 	}
 
@@ -27,7 +28,7 @@ public class OrderStorage {
 		lastId = newlastId;
 	}
 
-	public OrderStorage() throws ParseException {
+	private OrderStorage() throws ParseException {
 		this.textFileWorker = new TextFileWorker("D:\\ó÷¸áêà\\Senla\\Lesson4_Task1\\Orders.txt");
 		List<String> strings = new ArrayList<>(Arrays.asList(textFileWorker.readFromFile()));
 
@@ -36,17 +37,21 @@ public class OrderStorage {
 		}
 	}
 
+	public static OrderStorage getInstance() throws ParseException {
+		if (orderStorage == null) {
+			orderStorage = new OrderStorage();
+		}
+		return orderStorage;
+	}
+
 	public void addOrder(Order order) {
 		orders.add(order);
 	}
 
-	public boolean changeOrderStatus(Status status, Integer id) {
+	public void changeOrderStatus(Status status, Integer id) {
 		Order order = (Order) ListWorker.getEntityById(id, orders);
-		if (order != null) {
-			order.setStatus(status);
-			return true;
-		} else
-			return false;
+
+		order.setStatus(status);
 
 	}
 

@@ -11,9 +11,11 @@ public class Printer {
 	}
 
 	public static void printArray(List<? extends AEntity> list) {
+		int i=1;
 		for (AEntity entity : list) {
 			if (entity != null) {
-				System.out.println(entity.toString());
+				System.out.println(i+"-"+entity.toString());
+				i++;
 			}
 		}
 	}

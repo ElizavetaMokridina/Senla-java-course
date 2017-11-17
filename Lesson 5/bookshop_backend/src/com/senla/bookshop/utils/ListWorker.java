@@ -30,4 +30,11 @@ public class ListWorker {
 		}
 		return entity;
 	}
+	
+	public static Integer getIdByIndex(Integer index, List <? extends AEntity> list) throws IndexOutOfBoundsException  {
+	
+		return list.get(index-1).getId();
+		
+		
+	}
 }

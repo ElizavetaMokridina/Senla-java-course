@@ -13,31 +13,25 @@ public class BookService {
 	private final BookStorage bookStorage;
 
 	public BookService() throws ParseException {
-		this.bookStorage = new BookStorage();
+		this.bookStorage = BookStorage.getInstance();
 	}
 
-	public List <Book> sortBooks(Comparator comparator) {
-		List <Book>  books = BookStorage.getBooks();
+	public List<Book> sortBooks(Comparator<Book> comparator) {
+		List<Book> books = BookStorage.getBooks();
 		books.sort(comparator);
 		return books;
 	}
 
 	public Book getBookById(Integer id) {
-		List <Book>  books = BookStorage.getBooks();
+		List<Book> books = BookStorage.getBooks();
 		int position = ListWorker.findById(id, books);
-		if (position != -1) {
-			return books.get(position);
-		} else {
-		return null;
-		}
+		return books.get(position);
+
 	}
 
-	public boolean changeBookStatus(BookStatus status, Integer id) {
-		if(bookStorage.changeBookStatus(status, id)==false){
-		return false;
-		}
-		else return true;
-		
+	public void WriteOffBook(Integer id) {
+		bookStorage.changeBookStatus(BookStatus.NOT_IN_STOCK, id);
+
 	}
 
 	public void addBook(Book book) {
